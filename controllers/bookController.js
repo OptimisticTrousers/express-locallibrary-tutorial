@@ -9,14 +9,13 @@ exports.index = (req, res) => {
   async.parallel(
     {
       book_count(callback) {
-        Book.countDocuments({}, callback);
-        // Pass an empty object as match condition to find all documents of this collection
+        Book.countDocuments({}, callback); // Pass an empty object as match condition to find all documents of this collection
       },
       book_instance_count(callback) {
         BookInstance.countDocuments({}, callback);
       },
       book_instance_available_count(callback) {
-        BookInstance.countDocuments({ state: "Available" }, callback);
+        BookInstance.countDocuments({ status: "Available" }, callback);
       },
       author_count(callback) {
         Author.countDocuments({}, callback);
@@ -35,9 +34,19 @@ exports.index = (req, res) => {
   );
 };
 
+
 // Display list of all books.
-exports.book_list = (req, res) => {
-  res.send("NOT IMPLEMENTED: Book list");
+exports.book_list = function (req, res, next) {
+  Book.find({}, "title author")
+    .sort({ title: 1 })
+    .populate("author")
+    .exec(function (err, list_books) {
+      if (err) {
+        return next(err);
+      }
+      // Successful, so render
+      res.render("book_list", { title: "Book List", book_list: list_books });
+    });
 };
 
 // Display detail page for a specific book.
