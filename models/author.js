@@ -41,26 +41,19 @@ AuthorSchema.virtual("date_of_death_formatted").get(function () {
 });
 
 AuthorSchema.virtual("lifespan").get(function () {
-  let { date_of_birth, date_of_death } = this;
-
-  if(date_of_birth && date_of_death === undefined) {
+  if (this.date_of_birth && this.date_of_death !== undefined) {
+    return `${DateTime.fromJSDate(this.date_of_birth).toLocaleString(
+      DateTime.DATE_MED
+    )} - ${DateTime.fromJSDate(this.date_of_death).toLocaleString(
+      DateTime.DATE_MED
+    )}`;
+  } else if (this.date_of_birth !== undefined) {
+    return `${DateTime.fromJSDate(this.date_of_birth).toLocaleString(
+      DateTime.DATE_MED
+    )} - Present`;
+  } else {
     return "N/A"
   }
-  if (date_of_birth === undefined) {
-    date_of_birth = "Unknown";
-  }
-  if (date_of_death === undefined) {
-    date_of_death = "Present";
-  }
-  return `${date_of_birth} - ${date_of_death}`;
-
-  // return `${DateTime.fromJSDate(date_of_birth).toLocaleString(
-  //   DateTime.DATE_MED
-  // )} - ${DateTime.fromJSDate(date_of_death).toLcateString(DateTime.DATE_MED)}`;
-
-  // return this.date_of_death
-  //   ? DateTime.fromJSDate(this.date_of_death).toLocaleString(DateTime.DATE_MED)
-  //   : "";
 });
 
 module.exports = mongoose.model("Author", AuthorSchema);
