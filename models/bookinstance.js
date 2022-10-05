@@ -18,7 +18,7 @@ const BookInstanceSchema = new Schema({
 // Vritual for bookinstance's URL
 BookInstanceSchema.virtual("url").get(function () {
   // We don't use an arrow function as we'll need the this object
-  return `/catalog/bookstance/${this._id}`;
+  return `/catalog/bookinstance/${this._id}`;
 });
 
 BookInstanceSchema.virtual("due_back_formatted").get(function () {
