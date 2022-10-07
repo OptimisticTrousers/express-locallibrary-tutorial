@@ -21,6 +21,10 @@ BookInstanceSchema.virtual("url").get(function () {
   return `/catalog/bookinstance/${this._id}`;
 });
 
+BookInstanceSchema.virtual("due_back_iso").get(function () {
+  return this.due_back ? DateTime.fromJSDate(this.due_back).toISODate() : "";
+});
+
 BookInstanceSchema.virtual("due_back_formatted").get(function () {
   return DateTime.fromJSDate(this.due_back).toLocaleString(DateTime.DATE_MED);
 });
