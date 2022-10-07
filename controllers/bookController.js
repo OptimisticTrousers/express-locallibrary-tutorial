@@ -203,31 +203,61 @@ exports.book_delete_get = (req, res) => {
   async.parallel(
     {
       book(callback) {
-        Book.findById(req.params.id).exec(callback)
+        Book.findById(req.params.id).exec(callback);
       },
       book_instance(callback) {
-        BookInstance.find({book: req.params.id}).exec(callback)
-      }
+        BookInstance.find({ book: req.params.id }).exec(callback);
+      },
     },
     (err, results) => {
-      if(err) {
-        return next(err)
+      if (err) {
+        return next(err);
       }
-      if(results.book_instance == null) {
-        res.redirect("/catalog/books")
+      if (results.book_instance == null) {
+        res.redirect("/catalog/books");
       }
       res.render("book_delete", {
         title: "Delete Book",
         book: results.book,
-        book_instance: results.book_instance
-      })
+        book_instance: results.book_instance,
+      });
     }
-  )
+  );
 };
 
 // Handle book delete on POST.
 exports.book_delete_post = (req, res) => {
-  res.send("NOT IMPLEMENTED: Book delete POST");
+  async.parallel(
+    {
+      book(callback) {
+        Book.findById(req.body.bookid).exec(callback);
+      },
+      book_instance(callback) {
+        BookInstance.find({ book: req.body.bookid }).exec(callback);
+      },
+    },
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+
+      if (results.book_instance.length > 0) {
+        res.render("book_delete", {
+          title: "Delete Book",
+          book: results.book,
+          book_instance: results.book_instance,
+        });
+        return;
+      }
+      Book.findByIdAndRemove(req.body.bookid, (err) => {
+        if (err) {
+          return next(err);
+        }
+
+        res.redirect("/catalog/books");
+      });
+    }
+  );
 };
 
 // Display book update form on GET.
@@ -238,29 +268,29 @@ exports.book_update_get = (req, res, next) => {
         Book.findById(req.params.id)
           .populate("author")
           .populate("genre")
-          .exec(callback)
+          .exec(callback);
       },
       authors(callback) {
-        Author.find(callback)
+        Author.find(callback);
       },
       genres(callback) {
-        Genre.find(callback)
-      }
+        Genre.find(callback);
+      },
     },
     (err, results) => {
-      if(err) {
-        return next(err)
+      if (err) {
+        return next(err);
       }
-      if(results.book == null) {
-        const err = new Error("Book not found")
-        err.status = 404
-        return next(err)
+      if (results.book == null) {
+        const err = new Error("Book not found");
+        err.status = 404;
+        return next(err);
       }
 
-      for(const genre of results.genres) {
-        for(const bookGenre of results.book.genre) {
-          if(genre._id.toString() === bookGenre._id.toString()) {
-            genre.checked = "true"
+      for (const genre of results.genres) {
+        for (const bookGenre of results.book.genre) {
+          if (genre._id.toString() === bookGenre._id.toString()) {
+            genre.checked = "true";
           }
         }
       }
@@ -268,10 +298,10 @@ exports.book_update_get = (req, res, next) => {
         title: "Update Book",
         authors: results.authors,
         genres: results.genres,
-        book: results.book
-      })
+        book: results.book,
+      });
     }
-  )
+  );
 };
 
 // Handle book update on POST.
@@ -364,4 +394,3 @@ exports.book_update_post = [
     });
   },
 ];
-
