@@ -179,7 +179,15 @@ exports.author_delete_post = (req, res, next) => {
 
 // Display Author update form on GET.
 exports.author_update_get = (req, res) => {
-  res.send("NOT IMPLEMENTED: Author update GET");
+  Author.findById(req.params.id).exec((err, author) => {
+    if (err) {
+      return next(err);
+    }
+    res.render("author_form", {
+      title: "Update Author",
+      author,
+    });
+  });
 };
 
 // Handle Author update on POST.
