@@ -13,8 +13,9 @@ const helmet = require("helmet");
 
 var app = express();
 const mongoose = require("mongoose");
-const mongoDB =
+const dev_db_url =
   "mongodb+srv://optimistic:backatit2002@cluster0.8deylk9.mongodb.net/?retryWrites=true&w=majority";
+const mongoDB = process.env.MONGODB_URI || dev_db_url;
 mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
