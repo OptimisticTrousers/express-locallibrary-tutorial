@@ -28,6 +28,18 @@ AuthorSchema.virtual("url").get(function () {
   return `/catalog/author/${this._id}`;
 });
 
+AuthorSchema.virtual("date_of_birth_iso").get(function () {
+  return this.date_of_birth
+    ? DateTime.fromJSDate(this.date_of_birth).toISODate()
+    : "";
+});
+
+AuthorSchema.virtual("date_of_death_iso").get(function () {
+  return this.date_of_death
+    ? DateTime.fromJSDate(this.date_of_death).toISODate()
+    : "";
+});
+
 AuthorSchema.virtual("date_of_birth_formatted").get(function () {
   return this.date_of_birth
     ? DateTime.fromJSDate(this.date_of_birth).toLocaleString(DateTime.DATE_MED)
@@ -52,7 +64,7 @@ AuthorSchema.virtual("lifespan").get(function () {
       DateTime.DATE_MED
     )} - Present`;
   } else {
-    return "N/A"
+    return "N/A";
   }
 });
 
