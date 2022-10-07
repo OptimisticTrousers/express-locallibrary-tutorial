@@ -1,5 +1,5 @@
 const BookInstance = require("../models/bookinstance");
-const Book = require("../models/book")
+const Book = require("../models/book");
 const { body, validationResult } = require("express-validator");
 
 // Display list of all BookInstances.
@@ -45,16 +45,16 @@ exports.bookinstance_detail = (req, res, next) => {
 // Display BookInstance create form on GET.
 exports.bookinstance_create_get = (req, res, next) => {
   Book.find({}, "title").exec((err, books) => {
-    if(err) {
-      return next(err)
+    if (err) {
+      return next(err);
     }
 
     res.render("bookinstance_form", {
       title: "Create BookInstance",
-      book_list: books
-    })
-  })
-}
+      book_list: books,
+    });
+  });
+};
 
 // Handle BookInstance create on POST.
 // Handle BookInstance create on POST.
@@ -115,7 +115,25 @@ exports.bookinstance_create_post = [
 
 // Display BookInstance delete form on GET.
 exports.bookinstance_delete_get = (req, res) => {
-  res.send("NOT IMPLEMENTED: BookInstance delete GET");
+  BookInstance.findById(req.params.id)
+    .populate("book")
+    .exec((err, bookinstance) => {
+      if (err) {
+        return next(err);
+      }
+      if (bookinstance == null) {
+        // No results.
+        const err = new Error("Book copy not found");
+        err.status = 404;
+        return next(err);
+      }
+
+      // Successful, so render
+      res.render("bookinstance_delete", {
+        title: `Copy: ${bookinstance.book.title}`,
+        bookinstance,
+      });
+    });
 };
 
 // Handle BookInstance delete on POST.
