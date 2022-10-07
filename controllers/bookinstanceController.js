@@ -144,17 +144,6 @@ exports.bookinstance_delete_post = (req, res) => {
     }
     res.redirect("/catalog/bookinstances");
   });
-  // BookInstance.findByIdAndDelete(req.body.bookinstanceid).exec(
-  //   (err, book_instances) => {
-  //     if (err) {
-  //       return next(err);
-  //     }
-  //     res.render("bookinstance_delete", {
-  //       title: "Delete Book Instance",
-  //       book_instances,
-  //     });
-  //   }
-  // );
 };
 
 // Display BookInstance update form on GET.
