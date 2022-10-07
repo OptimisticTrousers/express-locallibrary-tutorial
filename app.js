@@ -9,6 +9,7 @@ var usersRouter = require("./routes/users");
 var catalogRouter = require("./routes/catalog");
 //Import routes for "catalog" area of site
 const compression = require("compression");
+const helmet = require("helmet");
 
 var app = express();
 const mongoose = require("mongoose");
@@ -23,6 +24,7 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
 
 app.use(compression());
+app.use(helmet());
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
