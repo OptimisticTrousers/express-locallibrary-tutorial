@@ -10,12 +10,11 @@ var catalogRouter = require("./routes/catalog");
 //Import routes for "catalog" area of site
 const compression = require("compression");
 const helmet = require("helmet");
+require("dotenv").config();
 
 var app = express();
 const mongoose = require("mongoose");
-const dev_db_url =
-  "mongodb+srv://optimistic:backatit2002@cluster0.8deylk9.mongodb.net/?retryWrites=true&w=majority";
-const mongoDB = process.env.MONGODB_URI || dev_db_url;
+const mongoDB = process.env.DB_STRING;
 mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
